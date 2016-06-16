@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
           for ( std::vector<std::vector<BaseFloat> >::iterator it
                     = (seg_times).begin();
                 it!= (seg_times).end(); ++it) {
-            int wav_proc_len = std::min(int(SNT_KALDI_SMP_FREQ*((*it)[1])) - total_samples_proc, wave_data.Dim()) -
+            int wav_proc_len = std::min(int(SNT_KALDI_SMP_FREQ*((*it)[1])) - total_samples_proc + int(6*SNT_KALDI_SMP_FREQ*vad_opts.frame_shift), wave_data.Dim()) -
                 (std::max(samp_dec_tracker, int(SNT_KALDI_SMP_FREQ*(*it)[0] - total_samples_proc - 12*(SNT_KALDI_SMP_FREQ*vad_opts.frame_shift))));
             //    KALDI_LOG << "wav_proc_len " << wav_proc_len;
             if (wav_proc_len > 0) {
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
 	      m_pFeaturePipeline->AcceptWaveform(SNT_KALDI_SMP_FREQ, wav_proc_in);
 //	      KALDI_LOG << "FEAT PIPE FRAMES : " << m_pFeaturePipeline->NumFramesReady();
               samp_dec_tracker = std::min(int(SNT_KALDI_SMP_FREQ*(*it)[1]) -
-                                          total_samples_proc, wave_data.Dim());
+                                          total_samples_proc + int(6*SNT_KALDI_SMP_FREQ*vad_opts.frame_shift), wave_data.Dim());
     //          KALDI_LOG << "samp_dec_trkr : " << samp_dec_tracker;
               m_pNnetDecoder->AdvanceDecoding();}
             last_seg_start = (*it)[0];
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
           }
         }
         else {
-          int wav_proc_len = std::max(0, std::min(int(SNT_KALDI_SMP_FREQ*(last_seg_end)) - total_samples_proc, wave_data.Dim()) -
+          int wav_proc_len = std::max(0, std::min(int(SNT_KALDI_SMP_FREQ*(last_seg_end)) - total_samples_proc + int(6*SNT_KALDI_SMP_FREQ*vad_opts.frame_shift), wave_data.Dim()) -
                                       (std::max(samp_dec_tracker, int(SNT_KALDI_SMP_FREQ*last_seg_start - total_samples_proc - 12*(SNT_KALDI_SMP_FREQ*vad_opts.frame_shift)))));
           //        KALDI_LOG << "wav_proc_len " << wav_proc_len;
           if (wav_proc_len > 0) {
@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
                                               wav_proc_len);
             m_pFeaturePipeline->AcceptWaveform(SNT_KALDI_SMP_FREQ, wav_proc_in);
             samp_dec_tracker = std::min(int(SNT_KALDI_SMP_FREQ*last_seg_end) -
-                                        total_samples_proc, wave_data.Dim());
+                                        total_samples_proc + int(6*SNT_KALDI_SMP_FREQ*vad_opts.frame_shift), wave_data.Dim());
         //    KALDI_LOG << "samp_dec_trkr : " << samp_dec_tracker;
             m_pNnetDecoder->AdvanceDecoding();}
 
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
                 it!= (seg_times).end(); ++it) {
 //	    KALDI_LOG << "SEG TIMING : " << (*it)[0] << " :: " << (*it)[1];
             CompactLattice clat;
-            int wav_proc_len = std::min(int(SNT_KALDI_SMP_FREQ*((*it)[1])) - total_samples_proc, wave_data.Dim()) -
+            int wav_proc_len = std::min(int(SNT_KALDI_SMP_FREQ*((*it)[1])) - total_samples_proc + int(6*SNT_KALDI_SMP_FREQ*vad_opts.frame_shift), wave_data.Dim()) -
                 (std::max(samp_dec_tracker, int(SNT_KALDI_SMP_FREQ*(*it)[0] - total_samples_proc - 12*(SNT_KALDI_SMP_FREQ*vad_opts.frame_shift))));
 
             if ((*it)[0] == last_seg_start) {
@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
                                                   wav_proc_len);
                 m_pFeaturePipeline->AcceptWaveform(SNT_KALDI_SMP_FREQ, wav_proc_in);
                 samp_dec_tracker = std::min(int(SNT_KALDI_SMP_FREQ*(*it)[1]) -
-                                            total_samples_proc, wave_data.Dim());
+                                            total_samples_proc + int(6*SNT_KALDI_SMP_FREQ*vad_opts.frame_shift), wave_data.Dim());
                 m_pNnetDecoder->AdvanceDecoding();}
               last_seg_start = (*it)[0];
               last_seg_end = (*it)[1];
@@ -232,7 +232,7 @@ int main(int argc, char *argv[]) {
                                                 wav_proc_len);
 
               m_pFeaturePipeline->AcceptWaveform(SNT_KALDI_SMP_FREQ, wav_proc_in);
-              samp_dec_tracker = std::min(int(SNT_KALDI_SMP_FREQ*(*it)[1]) - total_samples_proc, wave_data.Dim());
+              samp_dec_tracker = std::min(int(SNT_KALDI_SMP_FREQ*(*it)[1]) - total_samples_proc + int(6*SNT_KALDI_SMP_FREQ*vad_opts.frame_shift), wave_data.Dim());
 
               m_pNnetDecoder->AdvanceDecoding();}
             last_seg_start = (*it)[0];
